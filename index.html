@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#1a2744"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Palavra Viva"/>
+<link rel="manifest" href="manifest.json"/>
+<title>Palavra Viva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+<style>
+:root {
+  --navy:      #1a2744;
+  --navy2:     #243056;
+  --blue:      #2d4a8a;
+  --gold:      #c9933a;
+  --gold2:     #e8b45a;
+  --gold-dim:  rgba(201,147,58,0.18);
+  --cream:     #f8f3e8;
+  --cream2:    #ede5d0;
+  --text:      #1a1a2e;
+  --text2:     #3a3a55;
+  --text3:     rgba(248,243,232,0.65);
+  --white:     #ffffff;
+  --green:     #2d6a4f;
+  --green2:    #40916c;
+  --r:         14px;
+  --shadow:    0 8px 32px rgba(26,39,68,0.18);
+  --shadow-sm: 0 2px 10px rgba(26,39,68,0.10);
+
+  /* body font - DM Sans: clean, highly legible on screens */
+  --font-body: 'DM Sans', -apple-system, sans-serif;
+  /* titles - Playfair Display: editorial serif */
+  --font-title: 'Playfair Display', Georgia, serif;
+  /* quotes/verse - Lora: warm readable serif */
+  --font-serif: 'Lora', Georgia, serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--cream);
+  min-height: 100dvh;
+  overflow-x: hidden;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+/* ── TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse at 15% 10%, rgba(201,147,58,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 85%, rgba(45,74,138,0.14) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23c9933a' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0;
+}
+
+/* ── HEADER ── */
+.app-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(26,39,68,0.97);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(201,147,58,0.2);
+  padding: env(safe-area-inset-top,0) 0 0;
+}
+.header-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 13px 18px;
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon {
+  width: 34px; height: 34px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+  box-shadow: 0 2px 8px rgba(201,147,58,0.35);
+  flex-shrink: 0;
+}
+.logo-name {
+  font-family: var(--font-title);
+  font-size: 17px; font-weight: 700;
+  color: var(--cream); line-height: 1;
+}
+.logo-sub {
+  font-family: var(--font-body);
+  font-size: 10px; color: var(--gold);
+  letter-spacing: 0.09em; text-transform: uppercase;
+  font-weight: 500;
+}
+.streak-pill {
+  display: flex; align-items: center; gap: 5px;
+  background: rgba(201,147,58,0.14);
+  border: 1px solid rgba(201,147,58,0.28);
+  border-radius: 20px; padding: 5px 11px;
+}
+.streak-n {
+  font-family: var(--font-body);
+  font-size: 15px; font-weight: 700; color: var(--gold2);
+}
+.streak-l { font-size: 11px; color: var(--text3); font-weight: 500; }
+
+/* NAV */
+.nav-tabs {
+  display: flex; gap: 2px; padding: 0 14px 11px;
+  overflow-x: auto; scrollbar-width: none;
+}
+.nav-tabs::-webkit-scrollbar { display: none; }
+.nav-tab {
+  flex-shrink: 0; padding: 6px 14px;
+  border-radius: 18px; border: none;
+  background: transparent; cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 13px; font-weight: 500;
+  color: rgba(248,243,232,0.5);
+  transition: all 0.2s; letter-spacing: 0.01em;
+}
+.nav-tab.active {
+  background: rgba(201,147,58,0.16);
+  border: 1px solid rgba(201,147,58,0.28);
+  color: var(--gold2);
+}
+
+/* ── MAIN ── */
+main {
+  position: relative; z-index: 1;
+  max-width: 640px; margin: 0 auto;
+  padding: 18px 14px;
+  padding-bottom: calc(env(safe-area-inset-bottom,0px) + 24px);
+}
+.section { display: none; }
+.section.active { display: block; }
+
+/* ── ONBOARDING MODAL ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(10,18,40,0.94);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 300;
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.hidden { display: none; }
+.modal {
+  background: #1e2d54;
+  border: 1px solid rgba(201,147,58,0.25);
+  border-radius: var(--r);
+  padding: 28px 22px;
+  max-width: 360px; width: 100%;
+  box-shadow: var(--shadow);
+}
+.modal-icon {
+  width: 52px; height: 52px;
+  background: linear-gradient(135deg,var(--gold),var(--gold2));
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; margin: 0 auto 16px;
+  box-shadow: 0 4px 16px rgba(201,147,58,0.3);
+}
+.modal h2 {
+  font-family: var(--font-title);
+  font-size: 22px; font-weight: 700;
+  color: var(--cream); text-align: center; margin-bottom: 6px;
+}
+.modal-sub {
+  font-family: var(--font-body);
+  font-size: 14px; color: var(--text3);
+  text-align: center; line-height: 1.55; margin-bottom: 22px;
+}
+.modal-lbl {
+  font-family: var(--font-body);
+  font-size: 10px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--gold); margin-bottom: 10px;
+}
+.mode-opts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.mode-opt {
+  border: 1.5px solid rgba(201,147,58,0.2);
+  border-radius: 10px; padding: 14px 16px;
+  cursor: pointer; transition: all 0.15s;
+  position: relative;
+  background: rgba(255,255,255,0.03);
+}
+.mode-opt:hover { border-color: rgba(201,147,58,0.4); background: rgba(201,147,58,0.06); }
+.mode-opt.sel { border-color: var(--gold); background: rgba(201,147,58,0.10); }
+.mode-opt.sel::after {
+  content:'✓'; position: absolute; top:11px; right:13px;
+  color: var(--gold2); font-weight: 700; font-size: 13px;
+  font-family: var(--font-body);
+}
+.mode-opt-title {
+  font-family: var(--font-body);
+  font-size: 14px; font-weight: 600; color: var(--cream);
+  margin-bottom: 3px;
+}
+.mode-opt-desc {
+  font-family: var(--font-body);
+  font-size: 13px; color: var(--text3); line-height: 1.5;
+}
+.modal-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--navy); border: none; border-radius: 10px;
+  padding: 13px; cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 15px; font-weight: 700;
+  transition: opacity 0.15s; letter-spacing: 0.02em;
+}
+.modal-btn:disabled { opacity: 0.4; cursor: default; }
+.modal-btn:not(:disabled):active { opacity: 0.85; }
+
+/* ── CARDS ── */
+.card {
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(201,147,58,0.14);
+  border-radius: var(--r);
+  padding: 18px;
+  margin-bottom: 12px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.card-hero {
+  background: linear-gradient(145deg, rgba(45,74,138,0.55), rgba(26,39,68,0.8));
+  border-color: rgba(201,147,58,0.25);
+}
+.card-gold {
+  background: linear-gradient(135deg, rgba(201,147,58,0.14), rgba(232,180,90,0.07));
+  border-color: rgba(201,147,58,0.3);
+}
+
+/* ── VERSE ── */
+.verse-quot {
+  font-family: var(--font-title);
+  font-size: 72px; font-weight: 900;
+  color: rgba(201,147,58,0.09);
+  line-height: 0.6; display: block;
+  margin-bottom: -8px;
+  user-select: none;
+}
+.verse-txt {
+  font-family: var(--font-serif);
+  font-size: 17px; font-style: italic;
+  color: var(--cream); line-height: 1.65;
+}
+.verse-ref {
+  font-family: var(--font-body);
+  font-size: 11px; font-weight: 600;
+  color: var(--gold); letter-spacing: 0.09em;
+  text-transform: uppercase; margin-top: 10px;
+}
+
+/* ── MODE BADGE ── */
+.mode-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(201,147,58,0.11);
+  border: 1px solid rgba(201,147,58,0.22);
+  border-radius: 20px; padding: 4px 11px;
+  font-family: var(--font-body);
+  font-size: 11px; font-weight: 500; color: var(--gold2);
+  margin-bottom: 11px; cursor: pointer; transition: all 0.15s;
+}
+.mode-badge:hover { background: rgba(201,147,58,0.18); }
+.mode-badge .dot { font-size: 9px; opacity: 0.5; }
+
+/* ── TODAY CARD ── */
+.day-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.day-num {
+  font-family: var(--font-body);
+  font-size: 11px; font-weight: 600;
+  color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase;
+}
+.day-date { font-family: var(--font-body); font-size: 11px; color: var(--text3); }
+.day-theme {
+  font-family: var(--font-title);
+  font-size: 20px; font-weight: 700;
+  color: var(--cream); line-height: 1.25; margin-bottom: 16px;
+}
+
+.reading-block { margin-bottom: 13px; }
+.r-label {
+  display: flex; align-items: center; gap: 6px;
+  font-family: var(--font-body);
+  font-size: 10px; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.r-label::before { content:''; display:inline-block; width:16px; height:2px; border-radius:1px; }
+.r-label.at { color: var(--gold); }
+.r-label.at::before { background: var(--gold); }
+.r-label.nt { color: #8ab8f5; }
+.r-label.nt::before { background: #8ab8f5; }
+
+.r-text {
+  font-family: var(--font-title);
+  font-size: 19px; font-weight: 700;
+  color: var(--cream); line-height: 1.3;
+}
+
+.divider { height: 1px; background: rgba(201,147,58,0.13); margin: 13px 0; }
+
+/* ── BUTTONS ── */
+.btn-row { display: flex; gap: 9px; margin-top: 15px; }
+.btn-check {
+  flex: 1; padding: 12px 16px;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--navy); border: none; border-radius: 10px;
+  font-family: var(--font-body);
+  font-size: 14px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  letter-spacing: 0.02em;
+}
+.btn-check:active { transform: scale(0.97); }
+.btn-done {
+  flex: 1; padding: 12px 16px;
+  background: rgba(45,106,79,0.22);
+  border: 1px solid rgba(64,145,108,0.38);
+  color: #a8d8b0; border-radius: 10px;
+  font-family: var(--font-body);
+  font-size: 14px; font-weight: 600;
+  cursor: default;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.btn-skip {
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: var(--text3); border-radius: 10px;
+  font-size: 15px; cursor: pointer; transition: all 0.15s;
+}
+
+/* ── CATECHISM ── */
+.cat-src {
+  display: inline-block;
+  background: rgba(168,216,176,0.12);
+  border: 1px solid rgba(168,216,176,0.24);
+  border-radius: 20px; padding: 3px 10px;
+  font-family: var(--font-body);
+  font-size: 10px; font-weight: 600;
+  color: #a8d8b0; letter-spacing: 0.08em;
+  text-transform: uppercase; margin-bottom: 9px;
+}
+.cat-num {
+  font-family: var(--font-body);
+  font-size: 10px; font-weight: 600;
+  color: var(--green2); letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 7px;
+}
+.cat-q {
+  font-family: var(--font-title);
+  font-size: 16px; font-weight: 700;
+  color: var(--cream); line-height: 1.45; margin-bottom: 11px;
+}
+/* KEY: cat-a uses DM Sans for body legibility */
+.cat-a {
+  font-family: var(--font-body);
+  font-size: 14px; color: rgba(248,243,232,0.78);
+  line-height: 1.7;
+  border-left: 2px solid rgba(168,216,176,0.3);
+  padding-left: 12px;
+}
+.cat-a strong { color: var(--cream); font-weight: 600; }
+
+/* ── PROGRESS ── */
+.prog-wrap { background: rgba(255,255,255,0.08); border-radius:100px; height:6px; margin:8px 0 5px; overflow:hidden; }
+.prog-fill { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold2)); border-radius:100px; transition:width .6s cubic-bezier(.22,1,.36,1); }
+.prog-meta { display:flex; justify-content:space-between; font-family:var(--font-body); font-size:12px; color:var(--text3); }
+.prog-meta strong { color:var(--gold2); }
+
+/* ── CALENDAR ── */
+.cal-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.cal-title { font-family:var(--font-title); font-size:18px; font-weight:700; color:var(--cream); }
+.cal-nav-btns { display:flex; gap:7px; }
+.cal-nav-btn {
+  width:30px; height:30px; border-radius:50%;
+  background:rgba(201,147,58,0.1); border:1px solid rgba(201,147,58,0.25);
+  color:var(--gold); cursor:pointer; font-size:13px;
+  display:flex; align-items:center; justify-content:center; transition:all .15s;
+}
+.cal-nav-btn:active { background:rgba(201,147,58,0.25); }
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; }
+.cal-lbl { text-align:center; font-family:var(--font-body); font-size:9px; font-weight:600; color:var(--gold); padding:3px 0; letter-spacing:.05em; text-transform:uppercase; }
+.cal-day {
+  aspect-ratio:1; border-radius:7px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-body); font-size:12px; font-weight:500;
+  color:rgba(248,243,232,0.35); cursor:pointer; transition:all .12s;
+  position:relative;
+}
+.cal-day.has { color:rgba(248,243,232,0.7); }
+.cal-day.has:hover { background:rgba(201,147,58,0.1); }
+.cal-day.done { background:rgba(45,106,79,0.28); color:#a8d8b0; font-weight:700; }
+.cal-day.done::after { content:'✓'; position:absolute; bottom:1px; right:3px; font-size:7px; color:var(--green2); }
+.cal-day.today { background:rgba(201,147,58,0.22); border:1px solid rgba(201,147,58,0.45); color:var(--gold2); font-weight:700; }
+.cal-day.empty { cursor:default; }
+.cal-day:active:not(.empty) { transform:scale(0.88); }
+
+/* day detail */
+.day-detail {
+  margin-top:10px; padding:16px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(201,147,58,0.18);
+  border-radius:var(--r);
+}
+.dd-title { font-family:var(--font-title); font-size:16px; font-weight:700; color:var(--cream); margin-bottom:12px; }
+.dd-row { margin-bottom:9px; }
+.dd-lbl { font-family:var(--font-body); font-size:10px; font-weight:600; color:var(--gold); letter-spacing:.1em; text-transform:uppercase; margin-bottom:3px; }
+.dd-val { font-family:var(--font-title); font-size:16px; font-weight:700; color:var(--cream); }
+.dd-theme { font-family:var(--font-body); font-size:13px; color:var(--text3); font-style:italic; }
+.dd-btn {
+  width:100%; margin-top:12px; padding:12px;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:var(--navy); border:none; border-radius:9px;
+  font-family:var(--font-body); font-size:14px; font-weight:700;
+  cursor:pointer; transition:opacity .15s;
+}
+.dd-btn:active { opacity:.85; }
+
+/* ── CONFESSIONS ── */
+.sec-title { font-family:var(--font-title); font-size:22px; font-weight:900; color:var(--cream); margin-bottom:4px; }
+.sec-sub { font-family:var(--font-body); font-size:13px; color:var(--text3); font-style:italic; margin-bottom:16px; }
+
+.conf-tabs { display:flex; gap:7px; overflow-x:auto; scrollbar-width:none; margin-bottom:14px; padding-bottom:2px; }
+.conf-tabs::-webkit-scrollbar { display:none; }
+.conf-tab {
+  flex-shrink:0; padding:7px 14px;
+  border:1px solid rgba(168,216,176,0.18); border-radius:20px;
+  background:transparent; color:rgba(168,216,176,0.5);
+  font-family:var(--font-body); font-size:13px; font-weight:500;
+  cursor:pointer; transition:all .15s;
+}
+.conf-tab.active { background:rgba(168,216,176,0.14); border-color:rgba(168,216,176,0.38); color:#a8d8b0; }
+
+.conf-panel { display:none; }
+.conf-panel.active { display:block; }
+
+.conf-intro {
+  font-family:var(--font-body);
+  font-size:14px; color:rgba(248,243,232,0.7);
+  line-height:1.65; margin-bottom:14px;
+  padding:13px 14px;
+  background:rgba(168,216,176,0.06);
+  border-left:3px solid rgba(168,216,176,0.28);
+  border-radius:0 8px 8px 0;
+}
+.conf-intro em { color:var(--gold2); font-style:italic; }
+
+.conf-item {
+  margin-bottom:8px;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(201,147,58,0.1);
+  border-radius:10px; overflow:hidden;
+}
+.conf-head {
+  display:flex; align-items:flex-start; justify-content:space-between;
+  padding:13px 14px; cursor:pointer; transition:background .12s;
+}
+.conf-head:hover { background:rgba(255,255,255,0.04); }
+.conf-n { font-family:var(--font-body); font-size:10px; font-weight:600; color:var(--gold); letter-spacing:.1em; text-transform:uppercase; margin-bottom:3px; }
+.conf-t { font-family:var(--font-title); font-size:15px; font-weight:700; color:var(--cream); flex:1; line-height:1.3; }
+.conf-arrow { color:var(--gold); font-size:10px; margin-left:8px; margin-top:3px; flex-shrink:0; }
+/* KEY: conf-body uses DM Sans */
+.conf-body {
+  display:none; padding:0 14px 14px;
+  font-family:var(--font-body);
+  font-size:14px; color:rgba(248,243,232,0.72);
+  line-height:1.7;
+  border-top:1px solid rgba(201,147,58,0.1);
+  padding-top:12px;
+}
+.conf-body.open { display:block; }
+.conf-body em { color:var(--gold2); }
+.conf-body strong { color:var(--cream); font-weight:600; }
+
+/* ── STATS ── */
+.stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:9px; margin-bottom:12px; }
+.stat-box { background:rgba(255,255,255,0.05); border:1px solid rgba(201,147,58,0.13); border-radius:12px; padding:14px; text-align:center; }
+.stat-n { font-family:var(--font-title); font-size:34px; font-weight:900; color:var(--gold2); line-height:1; margin-bottom:4px; }
+.stat-l { font-family:var(--font-body); font-size:11px; font-weight:500; color:var(--text3); }
+
+.month-bar { margin-bottom:9px; }
+.month-row { display:flex; justify-content:space-between; font-family:var(--font-body); font-size:13px; color:rgba(248,243,232,0.65); margin-bottom:5px; }
+.month-row strong { color:var(--cream); }
+
+/* ── INSTALL STRIP ── */
+.install-strip {
+  background:rgba(201,147,58,0.1); border:1px solid rgba(201,147,58,0.22);
+  border-radius:10px; padding:11px 14px;
+  display:flex; align-items:center; gap:10px;
+  margin-bottom:12px;
+}
+.install-txt { flex:1; font-family:var(--font-body); font-size:13px; color:rgba(248,243,232,0.75); line-height:1.45; }
+.install-txt strong { color:var(--gold2); }
+.install-x { background:none; border:none; color:var(--text3); font-size:16px; cursor:pointer; padding:2px 4px; }
+
+/* ── TOAST ── */
+.toast {
+  position:fixed;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 18px);
+  left:50%; transform:translateX(-50%) translateY(64px);
+  background:rgba(45,106,79,0.96); border:1px solid rgba(64,145,108,0.4);
+  border-radius:20px; padding:11px 20px;
+  font-family:var(--font-body); font-size:14px; font-weight:500; color:#a8d8b0;
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  box-shadow:0 4px 20px rgba(0,0,0,0.25);
+  transition:transform .38s cubic-bezier(.22,1,.36,1);
+  z-index:200; white-space:nowrap;
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+
+/* ── BTNS IN STATS ── */
+.settings-row { display:flex; gap:9px; flex-wrap:wrap; justify-content:center; margin-top:4px; }
+.btn-sm {
+  padding:9px 18px; border-radius:9px;
+  font-family:var(--font-body); font-size:13px; font-weight:600;
+  cursor:pointer; transition:all .15s;
+}
+.btn-mode { background:rgba(201,147,58,0.13); border:1px solid rgba(201,147,58,0.28); color:var(--gold2); }
+.btn-mode:hover { background:rgba(201,147,58,0.22); }
+.btn-reset { background:rgba(139,26,26,0.18); border:1px solid rgba(139,26,26,0.35); color:#e07070; }
+.btn-reset:hover { background:rgba(139,26,26,0.28); }
+
+/* ── ANIMATIONS ── */
+@keyframes fu { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.fu1{animation:fu .38s ease both}
+.fu2{animation:fu .38s .07s ease both}
+.fu3{animation:fu .38s .14s ease both}
+.fu4{animation:fu .38s .21s ease both}
+</style>
+</head>
+<body>
+
+<!-- ══ MODAL ONBOARDING ══ -->
+<div class="modal-overlay" id="onboardModal">
+  <div class="modal">
+    <div class="modal-icon">✝</div>
+    <h2>Palavra Viva</h2>
+    <p class="modal-sub">Plano de leitura bíblica diária com os catecismos e confissões reformadas</p>
+    <div class="modal-lbl">Como deseja usar o plano?</div>
+    <div class="mode-opts">
+      <div class="mode-opt" id="opt1" onclick="pickMode('sequential')">
+        <div class="mode-opt-title">📖 Do início do plano</div>
+        <div class="mode-opt-desc">Começa pelo Dia 1 independente da data. Cada leitura marcada avança para o próximo dia.</div>
+      </div>
+      <div class="mode-opt" id="opt2" onclick="pickMode('calendar')">
+        <div class="mode-opt-title">📅 Devocional por data</div>
+        <div class="mode-opt-desc">Acompanha o calendário. O dia de hoje corresponde ao dia do plano pela data atual.</div>
+      </div>
+    </div>
+    <button class="modal-btn" id="startBtn" onclick="startApp()" disabled>Começar</button>
+  </div>
+</div>
+
+<!-- ══ HEADER ══ -->
+<header class="app-header">
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">✝</div>
+      <div>
+        <div class="logo-name">Palavra Viva</div>
+        <div class="logo-sub">Leitura Bíblica Diária</div>
+      </div>
+    </div>
+    <div class="streak-pill">
+      <span class="streak-n" id="streakNum">0</span>
+      <span style="font-size:13px">🔥</span>
+      <span class="streak-l">dias</span>
+    </div>
+  </div>
+  <nav class="nav-tabs">
+    <button class="nav-tab active" onclick="showSec('hoje',this)">✦ Hoje</button>
+    <button class="nav-tab" onclick="showSec('calendario',this)">Calendário</button>
+    <button class="nav-tab" onclick="showSec('confissoes',this)">Confissões</button>
+    <button class="nav-tab" onclick="showSec('progresso',this)">Progresso</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ══ HOJE ══ -->
+<section class="section active" id="sec-hoje">
+
+  <div class="install-strip fu1" id="installBanner" style="display:none">
+    <div class="install-txt">📲 Salvar como app: <strong>Compartilhar → "Adicionar à Tela de Início"</strong></div>
+    <button class="install-x" onclick="dismissInstall()">✕</button>
+  </div>
+
+  <div class="mode-badge fu1" id="modeBadge" onclick="openModeModal()">
+    <span id="modeIcon">📖</span>
+    <span id="modeTxt">Plano sequencial</span>
+    <span class="dot">· alterar</span>
+  </div>
+
+  <!-- Versículo -->
+  <div class="card fu1" id="verseCard">
+    <span class="verse-quot">"</span>
+    <div class="verse-txt" id="verseTxt">…</div>
+    <div class="verse-ref" id="verseRef">…</div>
+  </div>
+
+  <!-- Leitura -->
+  <div class="card card-hero fu2" id="todayCard">
+    <div class="day-meta">
+      <div class="day-num" id="dayNum">Dia …</div>
+      <div class="day-date" id="dayDate">…</div>
+    </div>
+    <div class="day-theme" id="dayTheme">…</div>
+
+    <div class="reading-block">
+      <div class="r-label at">Antigo Testamento</div>
+      <div class="r-text" id="atRead">…</div>
+    </div>
+    <div class="divider"></div>
+    <div class="reading-block">
+      <div class="r-label nt">Novo Testamento</div>
+      <div class="r-text" id="ntRead">…</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-check" id="checkBtn" onclick="markToday()">✓ Marcar como lido</button>
+      <button class="btn-skip" onclick="showToast('Que a graça de Deus te sustente amanhã!')">→</button>
+    </div>
+  </div>
+
+  <!-- Catecismo -->
+  <div class="card fu3" id="catCard">
+    <div class="cat-src" id="catSrc">…</div>
+    <div class="cat-num" id="catNum">…</div>
+    <div class="cat-q" id="catQ">…</div>
+    <div class="cat-a" id="catA">…</div>
+  </div>
+
+  <!-- Progress -->
+  <div class="card fu4">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <span style="font-family:var(--font-body);font-size:13px;font-weight:600;color:var(--cream)">Progresso anual</span>
+      <span style="font-family:var(--font-body);font-size:11px;font-weight:700;color:var(--gold)" id="pctTxt">0%</span>
+    </div>
+    <div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+    <div class="prog-meta">
+      <span><strong id="doneCnt">0</strong> dias lidos</span>
+      <span><strong id="remCnt">365</strong> restantes</span>
+    </div>
+  </div>
+
+</section>
+
+<!-- ══ CALENDÁRIO ══ -->
+<section class="section" id="sec-calendario">
+  <div class="sec-title fu1">Calendário</div>
+  <div class="sec-sub fu1">Toque em qualquer dia para ver a leitura</div>
+  <div class="card fu2">
+    <div class="cal-nav">
+      <div class="cal-title" id="calTitle">…</div>
+      <div class="cal-nav-btns">
+        <button class="cal-nav-btn" onclick="prevMonth()">‹</button>
+        <button class="cal-nav-btn" onclick="nextMonth()">›</button>
+      </div>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+  <div id="detailWrap" style="display:none" class="fu3">
+    <div class="day-detail">
+      <div class="dd-title" id="ddTitle">…</div>
+      <div class="dd-row"><div class="dd-lbl">Antigo Testamento</div><div class="dd-val" id="ddAt">…</div></div>
+      <div class="dd-row"><div class="dd-lbl">Novo Testamento</div><div class="dd-val" id="ddNt">…</div></div>
+      <div class="dd-row"><div class="dd-lbl">Tema</div><div class="dd-theme" id="ddTheme">…</div></div>
+      <button class="dd-btn" id="ddBtn" onclick="markDetailDay()">✓ Marcar como lido</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══ CONFISSÕES ══ -->
+<section class="section" id="sec-confissoes">
+  <div class="sec-title fu1">Confissões & Catecismos</div>
+  <div class="sec-sub fu1">Os padrões doutrinários da fé reformada</div>
+  <div class="conf-tabs fu2">
+    <button class="conf-tab active" onclick="showConf('hc',this)">Heidelberg</button>
+    <button class="conf-tab" onclick="showConf('wsc',this)">Westminster</button>
+    <button class="conf-tab" onclick="showConf('dort',this)">Cânones de Dort</button>
+    <button class="conf-tab" onclick="showConf('wc',this)">Conf. Westminster</button>
+    <button class="conf-tab" onclick="showConf('bcf',this)">Conf. Belga</button>
+  </div>
+  <div class="conf-panel active fu3" id="p-hc">
+    <div class="conf-intro">O Catecismo de Heidelberg (1563) — 129 perguntas em 52 Domingos — começa com a mais querida pergunta da fé reformada: <em>"Qual é o teu único consolo, tanto na vida como na morte?"</em></div>
+    <div id="l-hc"></div>
+  </div>
+  <div class="conf-panel" id="p-wsc"><div class="conf-intro">O Breve Catecismo de Westminster (1647), padrão doutrinário clássico das igrejas presbiterianas. Sua primeira pergunta define o propósito da vida humana com precisão incomparável.</div><div id="l-wsc"></div></div>
+  <div class="conf-panel" id="p-dort"><div class="conf-intro">Os Cânones de Dort (1619) estabelecem as cinco afirmações da graça soberana — os chamados <em>"cinco pontos do calvinismo"</em> — em resposta ao arminianismo.</div><div id="l-dort"></div></div>
+  <div class="conf-panel" id="p-wc"><div class="conf-intro">A Confissão de Fé de Westminster (1646) é o mais completo símbolo da teologia reformada, cobrindo toda a doutrina cristã em 33 capítulos.</div><div id="l-wc"></div></div>
+  <div class="conf-panel" id="p-bcf"><div class="conf-intro">A Confissão Belga (1561), redigida por Guido de Brès. Uma das três Formas de Unidade das igrejas reformadas de tradição holandesa.</div><div id="l-bcf"></div></div>
+</section>
+
+<!-- ══ PROGRESSO ══ -->
+<section class="section" id="sec-progresso">
+  <div class="sec-title fu1">Meu Progresso</div>
+  <div class="sec-sub fu1">Fiel é aquele que vos chama — 1 Ts 5:24</div>
+  <div class="stats-grid fu2">
+    <div class="stat-box"><div class="stat-n" id="s1">0</div><div class="stat-l">Dias lidos</div></div>
+    <div class="stat-box"><div class="stat-n" id="s2">0</div><div class="stat-l">Sequência 🔥</div></div>
+    <div class="stat-box"><div class="stat-n" id="s3">0%</div><div class="stat-l">Concluído</div></div>
+    <div class="stat-box"><div class="stat-n" id="s4">365</div><div class="stat-l">Restantes</div></div>
+  </div>
+  <div class="card fu3">
+    <div style="font-family:var(--font-body);font-size:14px;font-weight:600;color:var(--cream);margin-bottom:13px">Por mês</div>
+    <div id="monthStats"></div>
+  </div>
+  <div class="card fu4" style="text-align:center">
+    <div style="font-family:var(--font-body);font-size:12px;color:var(--text3);margin-bottom:12px">Modo: <strong id="modeLabel" style="color:var(--gold2)"></strong></div>
+    <div class="settings-row">
+      <button class="btn-sm btn-mode" onclick="openModeModal()">Alterar modo</button>
+      <button class="btn-sm btn-reset" onclick="confirmReset()">Redefinir progresso</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="toast" id="toastEl"></div>
+
+<script>
+// ── PLAN DATA ──────────────────────────────────────────────
+const PLAN=[
+["Gênesis 1–2","João 1:1-18","A Criação e o Verbo eterno"],
+["Gênesis 3–4","João 1:19-51","A Queda e o Cordeiro de Deus"],
+["Gênesis 5–7","João 2","O dilúvio e as bodas de Caná"],
+["Gênesis 8–10","João 3","O arco-íris e o novo nascimento"],
+["Gênesis 11–12","João 4","Babel e a mulher samaritana"],
+["Gênesis 13–15","João 5","Abraão e a autoridade do Filho"],
+["Gênesis 16–18","João 6:1-40","A promessa de Isaque e o pão da vida"],
+["Gênesis 19–21","João 6:41-71","Sodoma e as palavras da vida eterna"],
+["Gênesis 22–24","João 7","O sacrifício de Isaque e a água viva"],
+["Gênesis 25–26","João 8:1-30","Jacó e Esaú; a luz do mundo"],
+["Gênesis 27–29","João 8:31-59","Jacó e a verdade que liberta"],
+["Gênesis 30–31","João 9","Jacó prospera; o cego que vê"],
+["Gênesis 32–34","João 10","Jacó luta com Deus; o bom pastor"],
+["Gênesis 35–37","João 11:1-44","José vendido; Lázaro ressuscitado"],
+["Gênesis 38–40","João 11:45-57","José na prisão; conspiração contra Jesus"],
+["Gênesis 41–42","João 12:1-26","José exaltado; a entrada em Jerusalém"],
+["Gênesis 43–45","João 12:27-50","José se revela; a voz do Pai"],
+["Gênesis 46–47","João 13","Israel no Egito; Jesus lava os pés"],
+["Gênesis 48–50","João 14","Bênção de Jacó; Eu sou o caminho"],
+["Êxodo 1–3","João 15","Moisés chamado; a videira verdadeira"],
+["Êxodo 4–6","João 16","As pragas; o Consolador prometido"],
+["Êxodo 7–9","João 17","Pragas; a oração sumo-sacerdotal"],
+["Êxodo 10–12","João 18","A Páscoa; a prisão de Jesus"],
+["Êxodo 13–15","João 19","Travessia do mar; a crucificação"],
+["Êxodo 16–18","João 20","Maná no deserto; a ressurreição"],
+["Êxodo 19–20","João 21","Os Dez Mandamentos; o amor a Cristo"],
+["Êxodo 21–23","Romanos 1","Leis civis; a ira de Deus revelada"],
+["Êxodo 24–26","Romanos 2","A aliança e o tabernáculo; o juízo justo"],
+["Êxodo 27–28","Romanos 3","O altar; justificação pela fé"],
+["Êxodo 29–31","Romanos 4","Consagração; Abraão justificado pela fé"],
+["Êxodo 32–34","Romanos 5","O bezerro de ouro; paz com Deus"],
+["Êxodo 35–40","Romanos 6","O tabernáculo; mortos para o pecado"],
+["Levítico 1–4","Romanos 7","Sacrifícios; a luta interior"],
+["Levítico 5–7","Romanos 8","Oferta pela culpa; nada nos separa de Deus"],
+["Levítico 8–10","Romanos 9","Consagração sacerdotal; a eleição soberana"],
+["Levítico 11–13","Romanos 10","Leis de pureza; fé que salva"],
+["Levítico 14–15","Romanos 11","Purificação; o mistério de Israel"],
+["Levítico 16–17","Romanos 12","O Dia da Expiação; renovação da mente"],
+["Levítico 18–20","Romanos 13","Lei de santidade; as autoridades"],
+["Levítico 21–23","Romanos 14–15","Sacerdotes e festas; a consciência"],
+["Levítico 24–25","Gálatas 1","O Jubileu; um único evangelho"],
+["Levítico 26–27","Gálatas 2","Bênçãos e maldições; Paulo e Pedro"],
+["Números 1–3","Gálatas 3","Censo de Israel; a lei e a promessa"],
+["Números 4–6","Gálatas 4","Serviço levítico; filhos, não escravos"],
+["Números 7–8","Gálatas 5","Ofertas dos príncipes; frutos do Espírito"],
+["Números 9–11","Gálatas 6","A coluna de fogo; semear e colher"],
+["Números 12–14","Efésios 1","Rebeldia no deserto; eleitos em Cristo"],
+["Números 15–17","Efésios 2","Novas leis; salvos pela graça"],
+["Números 18–20","Efésios 3","Sustento dos levitas; o mistério revelado"],
+["Números 21–22","Efésios 4","A serpente de bronze; a unidade do corpo"],
+["Números 23–25","Efésios 5","Balaão; andar como filhos da luz"],
+["Números 26–28","Efésios 6","Segundo censo; a armadura de Deus"],
+["Números 29–31","Filipenses 1","Festas e guerras; viver é Cristo"],
+["Números 32–36","Filipenses 2–3","As tribos; humildade e cidadania"],
+["Deuteronômio 1–3","Filipenses 4","Revisão da jornada; a paz de Deus"],
+["Deuteronômio 4–6","Colossenses 1","O Shema; a supremacia de Cristo"],
+["Deuteronômio 7–9","Colossenses 2","A nação escolhida; Cristo, cabeça"],
+["Deuteronômio 10–12","Colossenses 3–4","O coração circuncidado; vida nova"],
+["Deuteronômio 13–15","1 Tessalonicenses 1–2","Falsos profetas; fé que opera"],
+["Deuteronômio 16–18","1 Tessalonicenses 3–4","Festas; a vinda do Senhor"],
+["Deuteronômio 19–21","1 Tessalonicenses 5","Cidades de refúgio; vigilância"],
+["Deuteronômio 22–24","2 Tessalonicenses 1–3","Leis sociais; o homem da iniquidade"],
+["Deuteronômio 25–27","1 Timóteo 1–2","Bênçãos; oração e ensino"],
+["Deuteronômio 28","1 Timóteo 3–4","A grande bênção e maldição; líderes"],
+["Deuteronômio 29–31","1 Timóteo 5–6","Nova aliança anunciada; contentamento"],
+["Deuteronômio 32–34","2 Timóteo 1–2","Cântico de Moisés; sofrimento com Cristo"],
+["Josué 1–4","2 Timóteo 3–4","A entrada em Canaã; a boa batalha"],
+["Josué 5–8","Tito 1–3","Jericó; líderes saudáveis na igreja"],
+["Josué 9–12","Filemom","A conquista; o escravo Onésimo"],
+["Josué 13–17","Hebreus 1–2","Divisão da terra; Cristo superior aos anjos"],
+["Josué 18–21","Hebreus 3–4","Cidades levíticas; o descanso de Deus"],
+["Josué 22–24","Hebreus 5–6","Renovação da aliança; Cristo sumo sacerdote"],
+["Juízes 1–3","Hebreus 7","Os primeiros juízes; Melquisedeque e Cristo"],
+["Juízes 4–6","Hebreus 8–9","Débora e Gideão; o sangue da nova aliança"],
+["Juízes 7–9","Hebreus 10","Gideão; fé que persevera"],
+["Juízes 10–13","Hebreus 11:1-22","Jefté e Sansão; heróis da fé no AT"],
+["Juízes 14–16","Hebreus 11:23-40","Sansão; Moisés e os profetas pela fé"],
+["Juízes 17–21","Hebreus 12","Idolatria e guerra civil; disciplina de filho"],
+["Rute 1–4","Hebreus 13","O redentor e a noiva; Cristo imutável"],
+["1 Samuel 1–3","Tiago 1–2","Samuel chamado; fé e obras"],
+["1 Samuel 4–7","Tiago 3–5","A arca; língua, oração e paciência"],
+["1 Samuel 8–11","1 Pedro 1–2","Israel quer um rei; eleitos pela graça"],
+["1 Samuel 12–15","1 Pedro 3–5","A desobediência de Saul; sofrimento"],
+["1 Samuel 16–17","2 Pedro 1–2","Davi ungido; Golias; fé crescente"],
+["1 Samuel 18–21","2 Pedro 3","Davi e Jônatas; o dia do Senhor"],
+["1 Samuel 22–25","1 João 1–2","Davi foge; caminhando na luz"],
+["1 Samuel 26–31","1 João 3–4","Morte de Saul; o amor que vem de Deus"],
+["2 Samuel 1–4","1 João 5 + 2Jo + 3Jo","Lamentação por Saul; a fé que vence"],
+["2 Samuel 5–8","Judas + Lucas 1","Davi em Jerusalém; o anúncio de Jesus"],
+["2 Samuel 9–12","Lucas 2–3","Davi e Bate-Seba; o nascimento de Cristo"],
+["2 Samuel 13–16","Lucas 4–5","Absalão; tentações e chamado dos discípulos"],
+["2 Samuel 17–20","Lucas 6–7","Restauração de Davi; o sermão na planície"],
+["2 Samuel 21–24","Lucas 8–9","Cântico de Davi; parábolas e transfiguração"],
+["1 Reis 1–4","Lucas 10–11","Salomão coroado; os 70 enviados"],
+["1 Reis 5–8","Lucas 12–13","O templo; não temais e o caminho estreito"],
+["1 Reis 9–11","Lucas 14–15","Apostasia de Salomão; as três parábolas da graça"],
+["1 Reis 12–15","Lucas 16–17","O reino dividido; Lázaro e a vinda do Reino"],
+["1 Reis 16–19","Lucas 18–19","Elias no Carmelo; Zaqueu e a entrada"],
+["1 Reis 20–22","Lucas 20–21","Acabe e Jezabel; sinais do fim"],
+["2 Reis 1–4","Lucas 22–23","Elias e Eliseu; a traição e crucificação"],
+["2 Reis 5–8","Lucas 24 + Atos 1","Milagres de Eliseu; ressurreição e ascensão"],
+["2 Reis 9–13","Atos 2–3","Jeú; Pentecostes e o coxo curado"],
+["2 Reis 14–17","Atos 4–5","Queda de Israel; fé e disciplina da igreja"],
+["2 Reis 18–21","Atos 6–7","Ezequias; Estêvão, o primeiro mártir"],
+["2 Reis 22–25","Atos 8–9","Josias e a queda de Judá; Paulo convertido"],
+["1 Crônicas 1–9","Atos 10–11","Genealogias; Cornélio e os gentios"],
+["1 Crônicas 10–16","Atos 12–13","Davi e a arca; a primeira missão"],
+["1 Crônicas 17–22","Atos 14–15","Deus promete a Davi; o concílio de Jerusalém"],
+["1 Crônicas 23–29","Atos 16–17","Preparativos do templo; Paulo no Areópago"],
+["2 Crônicas 1–7","Atos 18–19","O templo de Salomão; Paulo em Éfeso"],
+["2 Crônicas 8–14","Atos 20–21","Reis de Judá; Paulo preso"],
+["2 Crônicas 15–20","Atos 22–24","Josafá; Paulo diante de Félix"],
+["2 Crônicas 21–28","Atos 25–26","Mais reis; Paulo diante de Agripa"],
+["2 Crônicas 29–36","Atos 27–28","Ezequias, Josias; Paulo em Roma"],
+["Esdras 1–6","Mateus 1–3","Retorno do exílio; o nascimento do Rei"],
+["Esdras 7–10","Mateus 4–5","Arrependimento; o Sermão do Monte I"],
+["Neemias 1–5","Mateus 6–7","Os muros; o Sermão do Monte II e III"],
+["Neemias 6–10","Mateus 8–9","A dedicação; os milagres de Jesus"],
+["Neemias 11–13","Mateus 10–11","Reforma; o envio dos doze"],
+["Ester 1–5","Mateus 12–13","A rainha Ester; as parábolas do reino"],
+["Ester 6–10","Mateus 14–16","A libertação; Pedro confessa Cristo"],
+["Jó 1–6","Mateus 17–18","O sofrimento de Jó; a transfiguração"],
+["Jó 7–14","Mateus 19–20","Os amigos de Jó; o reino e os servos"],
+["Jó 15–21","Mateus 21–22","Jó questiona; disputas no templo"],
+["Jó 22–28","Mateus 23–24","Eliú fala; sinais do fim"],
+["Jó 29–34","Mateus 25","O clamor de Jó; os talentos e o juízo"],
+["Jó 35–42","Mateus 26–27","Restauração de Jó; a paixão de Cristo"],
+["Salmo 1–14","Mateus 28","A condição humana; a ressurreição e comissão"],
+["Salmo 15–22","Marcos 1–2","O rei messias e a cruz; início do ministério"],
+["Salmo 23–31","Marcos 3–4","O pastor; parábolas do reino"],
+["Salmo 32–41","Marcos 5–6","Arrependimento; milagres e João degolado"],
+["Salmo 42–51","Marcos 7–8","No abismo; a fé dos gentios"],
+["Salmo 52–63","Marcos 9–10","Perseguição; a transfiguração"],
+["Salmo 64–72","Marcos 11–12","O salmo messiânico; autoridade de Jesus"],
+["Salmo 73–83","Marcos 13–14","Teodiceia; traição e paixão"],
+["Salmo 84–92","Marcos 15–16","O templo de Deus; morte e ressurreição"],
+["Salmo 93–103","Romanos 1–3","Deus reina; a condição humana"],
+["Salmo 104–107","Romanos 4–5","Criação e graça; justificação pela fé"],
+["Salmo 108–118","Romanos 6–8","A pedra angular; vida no Espírito"],
+["Salmo 119:1-88","Romanos 9–10","A palavra de Deus; eleição e missão"],
+["Salmo 119:89-176","Romanos 11–12","O amor à lei; misericórdia e transformação"],
+["Salmo 120–134","Romanos 13–16","Cânticos de subida; a unidade da igreja"],
+["Salmo 135–145","Gálatas 1–3","Louvor ao Criador; lei e promessa"],
+["Salmo 146–150","Gálatas 4–6","O grande Aleluia; filhos de Deus"],
+["Provérbios 1–5","Efésios 1–3","O temor do Senhor; eleitos em Cristo"],
+["Provérbios 6–11","Efésios 4–6","Sabedoria e tolice; a armadura de Deus"],
+["Provérbios 12–17","Filipenses 1–4","Integridade e amizade; a paz de Deus"],
+["Provérbios 18–23","Colossenses 1–4","Diligência e generosidade; vida em Cristo"],
+["Provérbios 24–31","1-2 Tessalonicenses","A mulher virtuosa; a esperança cristã"],
+["Eclesiastes 1–6","1-2 Timóteo","A vaidade da vida; pastorado fiel"],
+["Eclesiastes 7–12","Tito + Filemom","Teme a Deus; graça que ensina"],
+["Cantares 1–8","Hebreus 1–4","O amor da aliança; Cristo superior"],
+["Isaías 1–8","Hebreus 5–8","O julgamento de Judá; o sumo sacerdote"],
+["Isaías 9–16","Hebreus 9–11","O príncipe da paz; o sangue da aliança"],
+["Isaías 17–27","Hebreus 12–13","O banquete messiânico; disciplina e graça"],
+["Isaías 28–37","Tiago + 1 Pedro","Confiar em Deus; fé e sofrimento"],
+["Isaías 38–47","2 Pedro + 1 João","Ezequias; caminhar na luz"],
+["Isaías 48–55","2-3 João + Judas","O servo sofredor; contender pela fé"],
+["Isaías 56–66","Apocalipse 1–3","A nova criação prometida; cartas às igrejas"],
+["Jeremias 1–9","Apocalipse 4–5","O chamado; o trono e o Cordeiro"],
+["Jeremias 10–19","Apocalipse 6–8","O julgamento de Judá; os selos e as trombetas"],
+["Jeremias 20–29","Apocalipse 9–11","O jugo de Babilônia; as duas testemunhas"],
+["Jeremias 30–38","Apocalipse 12–14","A nova aliança; a mulher e o dragão"],
+["Jeremias 39–48","Apocalipse 15–17","A queda de Jerusalém; as taças da ira"],
+["Jeremias 49–52","Apocalipse 18–19","Queda de Babilônia; o rei dos reis"],
+["Lamentações 1–5","Apocalipse 20–22","O lamento de Sião; a nova Jerusalém"],
+["Ezequiel 1–8","João 1:1-18","A glória de Deus; o Verbo que se fez carne"],
+["Ezequiel 9–16","João 3–4","A glória parte; novo nascimento"],
+["Ezequiel 17–24","João 6–7","Alegorias; o pão e a água viva"],
+["Ezequiel 25–32","João 8–10","Oráculos; o bom pastor"],
+["Ezequiel 33–40","João 11–12","O vigia; Lázaro e a entrada em Jerusalém"],
+["Ezequiel 41–48","João 13–14","O novo templo; Eu sou o caminho"],
+["Daniel 1–4","João 15–16","Deus fiel no exílio; o Consolador"],
+["Daniel 5–8","João 17","A queda de Babilônia; a oração de Cristo"],
+["Daniel 9–12","João 18–19","As visões finais; a paixão de Cristo"],
+["Oséias 1–7","João 20–21","O amor fiel de Deus; a ressurreição"],
+["Oséias 8–14","Romanos 1–4","Retorno ao Senhor; justificação pela fé"],
+["Joel 1–3","Romanos 5–8","O Dia do Senhor; nada nos separa"],
+["Amós 1–5","Romanos 9–11","Julgamento das nações; o mistério de Israel"],
+["Amós 6–9","Romanos 12–16","Buscai-me e vivereis; vida transformada"],
+["Obadias + Jonas","Gálatas 1–3","Edom e Nínive; lei e promessa"],
+["Miquéias 1–7","Gálatas 4–6","O pastor de Israel; filhos de Deus"],
+["Naum + Habacuque","Efésios 1–3","O justo viverá pela fé; eleitos em amor"],
+["Sofonias + Ageu","Efésios 4–6","O Dia do Senhor; a armadura de Deus"],
+["Zacarias 1–8","Filipenses 1–4","As visões; a paz de Deus"],
+["Zacarias 9–14","Colossenses 1–4","O rei manso; a supremacia de Cristo"],
+["Malaquias 1–4","Hebreus 1–6","O sol de justiça; Cristo superior"],
+["Isaías 52–53","Hebreus 7–10","O servo sofredor; o sangue da aliança"],
+["Salmo 22 + 110","Hebreus 11–13","A cruz e o sacerdote real; os heróis da fé"],
+["Jeremias 31 + Ez 36","Romanos 8","A nova aliança; nada nos separa"],
+["Gênesis 1–3 + Ap 21–22","João 1:1-18","Da criação à nova criação"],
+["Salmo 119 + 23","João 10","A palavra de Deus e o bom pastor"],
+["Deuteronômio 6 + 30","Mateus 5–7","Shema e nova aliança; o sermão do monte"],
+["Salmo 32 + 51","Romanos 8:1","Perdão; nenhuma condenação em Cristo"],
+["Números 6 + Salmo 67","2 Coríntios 13:14","A bênção aarônica e apostólica"],
+];
+while(PLAN.length<365) PLAN.push(["Salmo 119","João 1","Meditação na Palavra de Deus"]);
+const P=PLAN.slice(0,365);
+
+// ── CATECHISMS ────────────────────────────────────────────
+const HC=[
+  {n:"P.1",t:"O único consolo",q:"Qual é o teu único consolo, tanto na vida como na morte?",a:"Que eu, com corpo e alma, tanto na vida como na morte, não sou meu, mas sou propriedade fiel do meu Salvador Jesus Cristo, que com seu precioso sangue pagou plenamente por todos os meus pecados e me libertou de todo o poder do diabo; que também me guarda de tal forma que sem a vontade do meu Pai celestial nem um cabelo pode cair da minha cabeça; sim, que tudo me deve servir para a minha salvação. Por isso, também, por seu Espírito Santo, me assegura a vida eterna e me torna pronto e disposto a viver para Ele de todo o coração."},
+  {n:"P.2",t:"O que precisamos saber",q:"Quantas coisas precisas saber para que, com este consolo, possas viver e morrer feliz?",a:"Três coisas: <strong>primeiro</strong>, quão grande é o meu pecado e miséria; <strong>segundo</strong>, como posso ser liberto de todos os meus pecados e miséria; <strong>terceiro</strong>, como devo ser grato a Deus por tal libertação."},
+  {n:"P.5",t:"A inclinação para o mal",q:"Podes guardar todas estas coisas perfeitamente?",a:"Não; porque sou propenso por natureza a odiar a Deus e ao meu próximo."},
+  {n:"P.6",t:"A criação e a queda",q:"Criou Deus o homem tão perverso e iníquo?",a:"Não; mas Deus criou o homem bom e à sua imagem, isto é, na verdadeira justiça e santidade, para que pudesse conhecer a Deus seu Criador, amá-lo de todo o coração e viver com Ele eternamente, para louvá-lo e glorificá-lo."},
+  {n:"P.18",t:"O mediador divino-humano",q:"Mas quem pode ser esse mediador que ao mesmo tempo seja verdadeiro Deus e verdadeiro e justo homem?",a:"Nosso Senhor Jesus Cristo, que foi feito nossa sabedoria, justiça, santificação e redenção."},
+  {n:"P.21",t:"A fé verdadeira",q:"O que é a fé verdadeira?",a:"A fé verdadeira é um conhecimento certo e uma confiança firme, que o Espírito Santo opera no meu coração mediante o evangelho, pelo qual tenho por verdadeiro tudo o que Deus nos revelou em sua Palavra; e também que Deus me perdoou, para sempre, os pecados, me deu a justiça de Cristo e a salvação eterna, por pura graça, apenas em virtude do mérito de Cristo."},
+  {n:"P.26",t:"O Pai celestial",q:"O que crês quando dizes: Creio em Deus Pai todo-poderoso, Criador do céu e da terra?",a:"Que o Pai eterno de nosso Senhor Jesus Cristo, que do nada criou o céu e a terra, é, por causa de seu Filho Cristo, meu Deus e meu Pai, em quem confio tão plenamente que não duvido que Ele me proveja de tudo o que for necessário ao corpo e à alma."},
+  {n:"P.27",t:"A providência de Deus",q:"O que entendes pela providência de Deus?",a:"O poder onipotente e presente de Deus, pelo qual sustenta e governa o céu e a terra com todas as criaturas, de tal modo que ervas e gramíneas, chuva e seca, anos frutíferos e infrutíferos, saúde e doença, riqueza e pobreza, e tudo o mais, nos vêm não por acaso, mas de sua mão paternal."},
+  {n:"P.37",t:"O sofrimento de Cristo",q:"O que entendes pela palavra 'sofreu'?",a:"Que ele, durante toda a sua vida na terra, suportou, em corpo e alma, a ira de Deus contra o pecado de todo o gênero humano; a fim de que, pela sua paixão, como único sacrifício propiciatório, pudesse redimir nosso corpo e alma da eterna condenação."},
+  {n:"P.43",t:"A ressurreição",q:"Que benefício mais recebemos da ressurreição de Cristo?",a:"Em primeiro lugar, que Cristo, pela sua ressurreição, venceu a morte, para que nos pudesse fazer participantes da justiça que nos adquiriu pela sua morte. Em segundo lugar, que pelo seu poder somos agora despertados para uma nova vida. Em terceiro lugar, que a ressurreição de Cristo é para nós um penhor seguro de nossa bem-aventurada ressurreição."},
+  {n:"P.52",t:"A segunda vinda",q:"Que consolo te dá a volta de Cristo para julgar os vivos e os mortos?",a:"Que em toda a tribulação e perseguição eu espere, com a cabeça erguida, do céu, o próprio Juiz que já antes se submeteu ao juízo de Deus por mim e removeu toda a maldição de mim; o qual lançará todos os seus inimigos na condenação eterna, mas me levará com todos os seus eleitos para si, para a celestial alegria e glória."},
+  {n:"P.60",t:"A justificação",q:"Como és justificado diante de Deus?",a:"Somente pela verdadeira fé em Jesus Cristo; de tal forma que, embora minha consciência me acuse de que pequei gravemente contra todos os mandamentos de Deus, Deus, contudo, sem nenhum mérito meu, por pura graça, me imputa a perfeita satisfação, justiça e santidade de Cristo."},
+  {n:"P.86",t:"Por que boas obras?",q:"Visto que somos redimidos da nossa miséria por graça, mediante Cristo, sem nenhum mérito nosso, por que devemos fazer boas obras?",a:"Porque Cristo, tendo-nos remido com o seu sangue, nos renova também pelo seu Espírito à sua semelhança; a fim de que com toda a nossa vida mostremos que somos gratos a Deus pelos seus benefícios, e também a fim de que Ele seja glorificado por nós."},
+  {n:"P.116",t:"Por que orar?",q:"Por que é necessária a oração aos cristãos?",a:"Porque a oração é a parte principal da gratidão que Deus nos pede, e porque Deus quer dar a sua graça e o Espírito Santo somente àqueles que com suspiros contínuos lhe peçam essas coisas e lhe sejam gratos por elas."},
+  {n:"P.129",t:"Amém",q:"Que significa a palavra 'Amém'?",a:"Amém significa: assim será feito com certeza e segurança. Pois minha oração é muito mais certamente ouvida por Deus do que eu sinto em meu coração que desejo estas coisas dele."},
+];
+const WSC=[
+  {n:"P.1",t:"O fim último do homem",q:"Qual é o fim principal do homem?",a:"O fim principal do homem é <strong>glorificar a Deus e gozar d'Ele para sempre.</strong>"},
+  {n:"P.4",t:"O que é Deus?",q:"Que é Deus?",a:"Deus é Espírito, infinito, eterno e imutável em seu ser, sabedoria, poder, santidade, justiça, bondade e verdade."},
+  {n:"P.6",t:"A Trindade",q:"Quantas pessoas há na Divindade?",a:"Na Divindade há três pessoas: o Pai, o Filho e o Espírito Santo; e estas três são um só Deus, iguais em poder e glória."},
+  {n:"P.7",t:"Os decretos de Deus",q:"Que são os decretos de Deus?",a:"Os decretos de Deus são o seu propósito eterno, segundo o conselho de sua vontade, pelo qual Ele, para a sua própria glória, preordenou tudo quanto acontece."},
+  {n:"P.14",t:"O pecado",q:"Que é pecado?",a:"O pecado é qualquer <strong>falta de conformidade com a lei de Deus, ou transgressão da mesma.</strong>"},
+  {n:"P.20",t:"A eleição",q:"Deixou Deus toda a humanidade perecer no estado de pecado e miséria?",a:"Não; pois, desde toda a eternidade, Deus elegeu alguns para vida eterna, tendo estabelecido com eles um pacto de graça para os libertar do estado de pecado e miséria por um Redentor."},
+  {n:"P.21",t:"O Redentor",q:"Quem é o Redentor dos eleitos de Deus?",a:"O único Redentor dos eleitos de Deus é o Senhor Jesus Cristo, que, sendo o eterno Filho de Deus, se fez homem, e foi e permanece Deus e homem em duas naturezas distintas, e uma só pessoa, para sempre."},
+  {n:"P.33",t:"A justificação",q:"O que é a justificação?",a:"A justificação é um ato da graça livre de Deus pelo qual Ele nos perdoa todos os nossos pecados, e nos aceita como justos em sua presença, somente pela imputação da justiça de Cristo, recebida pela fé somente."},
+  {n:"P.34",t:"A adoção",q:"O que é a adoção?",a:"A adoção é um ato da graça livre de Deus pelo qual somos recebidos no número e temos direito a todos os privilégios dos filhos de Deus."},
+  {n:"P.35",t:"A santificação",q:"O que é a santificação?",a:"A santificação é a obra da graça livre de Deus pela qual somos renovados em todo o nosso ser segundo a imagem de Deus, e somos cada vez mais capacitados a morrer para o pecado e a viver para a justiça."},
+  {n:"P.86",t:"A fé em Cristo",q:"O que é crer em Jesus Cristo?",a:"Crer em Jesus Cristo é uma graça salvadora, pela qual o recebemos e descansamos nele somente para salvação, como ele é oferecido no evangelho."},
+  {n:"P.87",t:"O arrependimento",q:"O que é o arrependimento para vida?",a:"O arrependimento para vida é uma graça salvadora pela qual o pecador, com verdadeiro sentido do seu pecado e apreensão da misericórdia de Deus em Cristo, com dor e ódio do pecado, se desvia dele para Deus, com pleno propósito de, e esforço por, uma nova obediência."},
+  {n:"P.107",t:"Porque teu é o reino",q:"O que nos ensina o final do Pai Nosso?",a:"O final do Pai Nosso ensina a tomar nosso encorajamento na oração somente de Deus, e a, em nossas orações, louvar-lhe, atribuindo o reino, poder e glória somente a Ele."},
+];
+const DORT=[
+  {n:"Artigo 1",t:"A Eleição Incondicional",q:"O que ensina o Primeiro Artigo sobre a eleição?",a:"Que todos os homens pecaram em Adão, Deus elegeu, desde a eternidade, em Cristo, certo número de pessoas para a salvação. Esta eleição não está fundamentada na previsão da fé ou de boas obras, mas unicamente na graça soberana e no amor livre de Deus."},
+  {n:"Artigo 2",t:"A Expiação Definida",q:"O que ensina o Segundo Artigo sobre a morte de Cristo?",a:"Que a morte do Filho de Deus é o único e perfeitamente suficiente sacrifício pelos pecados. Esta morte é de tal eficácia que produz frutos salvíficos em todos e somente aqueles que foram eleitos para a salvação desde a eternidade."},
+  {n:"Artigos 3/4",t:"Depravação Total e Graça Irresistível",q:"O que ensinam os Artigos 3 e 4 sobre o homem e a graça?",a:"Que o homem não tem em si mesmo vontade nem força para se voltar a Deus. Deus, porém, pelo Espírito Santo, não apenas ilumina o entendimento, mas renova a vontade. Este chamado não pode ser resistido de forma a frustrar o propósito de Deus."},
+  {n:"Artigo 5",t:"A Perseverança dos Santos",q:"O que ensina o Quinto Artigo sobre a perseverança?",a:"Que Deus não retira dos eleitos o dom da perseverança; mas os guarda fielmente até o fim. Os eleitos, ainda que caiam por fraqueza, são de novo levantados por Deus. Esta certeza vem da fé nas promessas de Deus e do testemunho do Espírito Santo."},
+  {n:"Resumo",t:"Os cinco pontos (TULIP)",q:"Como se resumem os cinco artigos?",a:"<strong>T</strong>otal depravação — o pecado afeta toda a natureza humana.<br><strong>U</strong>nconditional election — eleição incondicional, não baseada na previsão da fé.<br><strong>L</strong>imited atonement — expiação definida, pelos eleitos.<br><strong>I</strong>rresistible grace — graça irresistível, o chamado eficaz não é frustrado.<br><strong>P</strong>erseverance — os eleitos são guardados por Deus até o fim."},
+];
+const WC=[
+  {n:"Cap. 1",t:"Das Sagradas Escrituras",q:"O que a Confissão ensina sobre a Escritura?",a:"As Escrituras do AT e NT são a Palavra de Deus escrita e têm plena autoridade, não por testemunho de qualquer homem ou Igreja, mas por causa de Deus, seu autor. A única regra infalível de fé e prática é a Escritura."},
+  {n:"Cap. 3",t:"Do Decreto Eterno de Deus",q:"O que a Confissão ensina sobre a predestinação?",a:"Deus, desde toda a eternidade, por seu propósito santíssimo, predestinou alguns homens e anjos para a vida eterna. Aqueles assim predestinados para a vida, Deus os escolheu em Cristo segundo sua graça livre e soberana. A doutrina da predestinação deve ser tratada com especial prudência e cuidado."},
+  {n:"Cap. 7",t:"Do Pacto de Deus com o Homem",q:"O que a Confissão ensina sobre a teologia da aliança?",a:"Deus foi servido expressar sua vontade por via de aliança. A primeira aliança com o homem foi a aliança de obras; a segunda é a aliança de graça, pela qual Deus oferece gratuitamente aos pecadores a vida e salvação por Jesus Cristo."},
+  {n:"Cap. 8",t:"De Cristo, o Mediador",q:"Quem é Cristo segundo a Confissão?",a:"O Senhor Jesus é o único mediador entre Deus e o homem — uma pessoa em duas naturezas, distintas, perfeitas e integrais: a divina e a humana."},
+  {n:"Cap. 11",t:"Da Justificação",q:"O que a Confissão ensina sobre a justificação?",a:"Deus justifica os que foram eficazmente chamados, não infundindo justiça neles, mas perdoando-lhes os pecados e imputando-lhes a obediência e satisfação de Cristo. A fé que recebe e repousa em Cristo não é um mérito, mas um instrumento."},
+  {n:"Cap. 17",t:"Da Perseverança dos Santos",q:"O que a Confissão ensina sobre a perseverança?",a:"Os que Deus aceitou em seu amado Filho jamais poderão cair totalmente ou definitivamente do estado de graça. Continuarão certamente nessa graça até o fim e serão salvos eternamente. Esta perseverança depende da imutabilidade do decreto de eleição."},
+  {n:"Cap. 21",t:"Do Culto e do Dia de Descanso",q:"O que a Confissão ensina sobre o culto?",a:"A forma aceitável de adorar ao verdadeiro Deus é por Ele mesmo instituída; Ele não pode ser adorado segundo imaginações e invenções dos homens. Deus deve ser adorado em espírito e em verdade."},
+];
+const BCF=[
+  {n:"Art. 1",t:"Há somente um único Deus",q:"O que afirma o Art. 1 sobre Deus?",a:"Cremos que há um único e simples ser espiritual, a quem chamamos de Deus — eterno, incompreensível, invisível, imutável, infinito, Todo-Poderoso, plenamente sábio, justo, bom e a muitíssimo abundante fonte de todo bem."},
+  {n:"Art. 2",t:"Como conhecemos a Deus",q:"Quais são os meios pelos quais conhecemos a Deus?",a:"Conhecemo-Lo de dois modos: em primeiro lugar, pela criação, conservação e governo do universo. Em segundo lugar, Ele Se conhece a Si mesmo de maneira mais clara e completa por sua santa e divina Palavra."},
+  {n:"Art. 7",t:"Suficiência da Escritura",q:"O que afirma o Art. 7 sobre a suficiência da Bíblia?",a:"Cremos que esta santa Escritura contém plenamente a vontade de Deus e que nela está suficientemente ensinado tudo que o ser humano precisa saber para a salvação. Não é lícito adicionar à Escritura nem dela subtrair coisa alguma."},
+  {n:"Art. 16",t:"A eleição eterna",q:"O que afirma o Art. 16 sobre a eleição?",a:"Deus manifestou ser tal qual é: misericordioso e justo. Misericordioso, ao libertar e salvar da condenação os eleitos que em sua eterna e imutável determinação elegeu em Jesus Cristo; justo, ao deixar os demais na ruína em que eles mesmos se precipitaram."},
+  {n:"Art. 22",t:"A fé que nos une a Cristo",q:"O que afirma o Art. 22 sobre a fé?",a:"Para termos o verdadeiro conhecimento deste mistério é necessário termos no coração uma fé verdadeira que abrace Jesus Cristo com todas as suas obras, o aceite como pertencendo a nós e não busque mais nada além d'Ele."},
+  {n:"Art. 29",t:"As marcas da verdadeira Igreja",q:"Quais são as marcas da verdadeira Igreja?",a:"As marcas pelas quais se pode conhecer a verdadeira Igreja são: a pregação pura do evangelho; a administração pura dos sacramentos como Cristo os instituiu; e a prática da disciplina eclesiástica para corrigir os pecados."},
+];
+
+const VERSES=[
+  ["A tua palavra é lâmpada para os meus pés e luz para o meu caminho.","Salmo 119:105"],
+  ["Fui crucificado com Cristo; e já não sou eu que vivo, mas Cristo vive em mim.","Gálatas 2:20"],
+  ["O justo viverá pela fé.","Habacuque 2:4 / Romanos 1:17"],
+  ["Porque pela graça sois salvos, mediante a fé; e isso não vem de vós; é dom de Deus.","Efésios 2:8"],
+  ["Nada nos poderá separar do amor de Deus que está em Cristo Jesus, nosso Senhor.","Romanos 8:39"],
+  ["O SENHOR é o meu pastor e nada me faltará.","Salmo 23:1"],
+  ["Toda a Escritura é divinamente inspirada e proveitosa para ensinar, para repreender, para corrigir, para instruir em justiça.","2 Timóteo 3:16"],
+  ["O fim principal do homem é glorificar a Deus e gozar d'Ele para sempre.","Cat. de Westminster, P.1"],
+  ["Qual é o teu único consolo, tanto na vida como na morte? Que sou propriedade fiel do meu Salvador.","Cat. de Heidelberg, P.1"],
+  ["Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito.","João 3:16"],
+  ["Busquem em primeiro lugar o Reino de Deus e a sua justiça.","Mateus 6:33"],
+  ["Confia no SENHOR de todo o teu coração e não te estribes no teu próprio entendimento.","Provérbios 3:5"],
+  ["Portanto não há agora nenhuma condenação para os que estão em Cristo Jesus.","Romanos 8:1"],
+  ["Crê no Senhor Jesus Cristo e serás salvo.","Atos 16:31"],
+  ["A eleição não está fundamentada na previsão da fé, mas unicamente na graça soberana de Deus.","Cânones de Dort, Art. I"],
+  ["Deus é Espírito, e importa que os que o adoram o adorem em espírito e em verdade.","João 4:24"],
+  ["Vinde a mim, todos os que estais cansados e sobrecarregados, e eu vos aliviarei.","Mateus 11:28"],
+  ["O Senhor não tarda em cumprir a sua promessa; antes é longânimo para convosco.","2 Pedro 3:9"],
+  ["Seja feita a tua vontade, assim na terra como no céu.","Mateus 6:10"],
+  ["A graça do Senhor Jesus Cristo, e o amor de Deus, e a comunhão do Espírito Santo sejam com todos vós.","2 Coríntios 13:14"],
+];
+
+// ── STATE ─────────────────────────────────────────────────
+let S={mode:null,seqDay:1,done:{},calMonth:new Date().getMonth(),calYear:new Date().getFullYear(),selDn:null,selDay:null};
+function load(){try{const s=localStorage.getItem('pvS3');if(s)S={...S,...JSON.parse(s)};}catch(e){}}
+function save(){try{localStorage.setItem('pvS3',JSON.stringify(S));}catch(e){}}
+function yd(d){return Math.floor((d-new Date(d.getFullYear(),0,0))/864e5);}
+function todayDn(){return Math.min(yd(new Date()),365);}
+function curDay(){return S.mode==='sequential'?S.seqDay:todayDn();}
+function isDone(y,n){return!!S.done[`${y}_${n}`];}
+function setDone(y,n,v){const k=`${y}_${n}`;if(v)S.done[k]=true;else delete S.done[k];save();}
+function getStreak(){let s=0,d=new Date();while(true){const n=yd(d);if(n<1)break;if(isDone(d.getFullYear(),n)){s++;d.setDate(d.getDate()-1);}else break;}return s;}
+function totalDone(){return Object.keys(S.done).length;}
+
+// ── ONBOARDING ────────────────────────────────────────────
+let _mode=null;
+function pickMode(m){_mode=m;document.getElementById('opt1').classList.toggle('sel',m==='sequential');document.getElementById('opt2').classList.toggle('sel',m==='calendar');document.getElementById('startBtn').disabled=false;}
+function startApp(){if(!_mode)return;S.mode=_mode;if(_mode==='sequential')S.seqDay=1;save();document.getElementById('onboardModal').classList.add('hidden');renderAll();}
+function openModeModal(){_mode=S.mode;document.getElementById('opt1').classList.toggle('sel',S.mode==='sequential');document.getElementById('opt2').classList.toggle('sel',S.mode==='calendar');document.getElementById('startBtn').disabled=false;document.getElementById('startBtn').textContent='Confirmar';document.getElementById('onboardModal').classList.remove('hidden');}
+
+// ── RENDER TODAY ──────────────────────────────────────────
+function renderToday(){
+  const today=new Date();
+  const pd=curDay();
+  const [at,nt,theme]=P[Math.min(pd-1,P.length-1)];
+  const MO=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const WD=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+
+  document.getElementById('dayNum').textContent=`Dia ${pd} de 365`;
+  document.getElementById('dayDate').textContent=S.mode==='calendar'
+    ?`${WD[today.getDay()]}, ${today.getDate()} de ${MO[today.getMonth()]}`
+    :`Plano sequencial`;
+  document.getElementById('dayTheme').textContent=theme;
+  document.getElementById('atRead').textContent=at;
+  document.getElementById('ntRead').textContent=nt;
+
+  const dk=S.mode==='calendar'?isDone(today.getFullYear(),todayDn()):isDone(0,pd);
+  const btn=document.getElementById('checkBtn');
+  if(dk){btn.className='btn-done';btn.textContent='✓ Leitura concluída!';}
+  else{btn.className='btn-check';btn.innerHTML='✓ Marcar como lido';}
+
+  const vi=(pd-1)%VERSES.length;
+  document.getElementById('verseTxt').textContent=VERSES[vi][0];
+  document.getElementById('verseRef').textContent=VERSES[vi][1];
+
+  const allCat=[...HC.map(q=>({...q,src:'Catecismo de Heidelberg'})),...WSC.map(q=>({...q,src:'Cat. de Westminster'}))];
+  const cat=allCat[(pd-1)%allCat.length];
+  document.getElementById('catSrc').textContent=cat.src;
+  document.getElementById('catNum').textContent=`${cat.n} — ${cat.t}`;
+  document.getElementById('catQ').textContent=cat.q;
+  document.getElementById('catA').innerHTML=cat.a;
+
+  const done=totalDone(),pct=Math.round((done/365)*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('pctTxt').textContent=pct+'%';
+  document.getElementById('doneCnt').textContent=done;
+  document.getElementById('remCnt').textContent=365-done;
+  document.getElementById('streakNum').textContent=getStreak();
+
+  const isSeq=S.mode==='sequential';
+  document.getElementById('modeIcon').textContent=isSeq?'📖':'📅';
+  document.getElementById('modeTxt').textContent=isSeq?`Plano sequencial — Dia ${pd}`:'Devocional por data';
+  if(document.getElementById('modeLabel'))document.getElementById('modeLabel').textContent=isSeq?`Sequencial (Dia ${S.seqDay})`:'Devocional por data';
+}
+
+function markToday(){
+  const pd=curDay();
+  const y=S.mode==='calendar'?new Date().getFullYear():0;
+  const dn=S.mode==='calendar'?todayDn():pd;
+  if(!isDone(y,dn)){setDone(y,dn,true);if(S.mode==='sequential'&&S.seqDay<365)S.seqDay++;save();showToast('✓ Leitura marcada! Soli Deo Gloria');}
+  renderAll();
+}
+
+// ── CALENDAR ──────────────────────────────────────────────
+function renderCalendar(){
+  const MN=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  document.getElementById('calTitle').textContent=`${MN[S.calMonth]} ${S.calYear}`;
+  const g=document.getElementById('calGrid');g.innerHTML='';
+  ['D','S','T','Q','Q','S','S'].forEach(l=>{const e=document.createElement('div');e.className='cal-lbl';e.textContent=l;g.appendChild(e);});
+  const fd=new Date(S.calYear,S.calMonth,1).getDay();
+  const dm=new Date(S.calYear,S.calMonth+1,0).getDate();
+  const td=new Date();
+  for(let i=0;i<fd;i++){const e=document.createElement('div');e.className='cal-day empty';g.appendChild(e);}
+  for(let d=1;d<=dm;d++){
+    const dt=new Date(S.calYear,S.calMonth,d);
+    const dn=yd(dt);
+    const e=document.createElement('div');
+    const isTd=dt.toDateString()===td.toDateString();
+    const done=isDone(S.calYear,dn);
+    const has=dn>=1&&dn<=365;
+    e.className='cal-day'+(has?' has':'')+(done?' done':'')+(isTd?' today':'');
+    e.textContent=d;
+    if(has){e.onclick=()=>{S.selDay=d;S.selDn=dn;renderDetail();};}
+    g.appendChild(e);
+  }
+}
+function renderDetail(){
+  const dn=S.selDn,e=P[Math.min(dn-1,P.length-1)];
+  const MN=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  document.getElementById('ddTitle').textContent=`Dia ${dn} — ${S.selDay} de ${MN[S.calMonth]} ${S.calYear}`;
+  document.getElementById('ddAt').textContent=e[0];
+  document.getElementById('ddNt').textContent=e[1];
+  document.getElementById('ddTheme').textContent=e[2];
+  const done=isDone(S.calYear,dn);
+  const btn=document.getElementById('ddBtn');
+  if(done){btn.textContent='✓ Já lido!';btn.style.opacity='.55';btn.onclick=null;}
+  else{btn.textContent='✓ Marcar como lido';btn.style.opacity='1';btn.onclick=markDetailDay;}
+  const w=document.getElementById('detailWrap');w.style.display='block';
+  w.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function markDetailDay(){if(!S.selDn)return;setDone(S.calYear,S.selDn,true);renderCalendar();renderDetail();renderToday();showToast('✓ Dia marcado como lido!');}
+function prevMonth(){S.calMonth--;if(S.calMonth<0){S.calMonth=11;S.calYear--;}document.getElementById('detailWrap').style.display='none';renderCalendar();}
+function nextMonth(){S.calMonth++;if(S.calMonth>11){S.calMonth=0;S.calYear++;}document.getElementById('detailWrap').style.display='none';renderCalendar();}
+
+// ── CONFESSIONS ───────────────────────────────────────────
+function buildList(items,id){
+  const c=document.getElementById(id);if(c.children.length>0)return;
+  items.forEach(item=>{
+    const d=document.createElement('div');d.className='conf-item';
+    d.innerHTML=`<div class="conf-head"><div><div class="conf-n">${item.n}</div><div class="conf-t">${item.t}</div></div><div class="conf-arrow">▼</div></div><div class="conf-body">${item.q}<br><br>${item.a}</div>`;
+    d.querySelector('.conf-head').onclick=()=>{const b=d.querySelector('.conf-body'),a=d.querySelector('.conf-arrow');b.classList.toggle('open');a.textContent=b.classList.contains('open')?'▲':'▼';};
+    c.appendChild(d);
+  });
+}
+function showConf(id,btn){
+  document.querySelectorAll('.conf-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.conf-panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');document.getElementById('p-'+id).classList.add('active');
+  const m={'hc':[HC,'l-hc'],'wsc':[WSC,'l-wsc'],'dort':[DORT,'l-dort'],'wc':[WC,'l-wc'],'bcf':[BCF,'l-bcf']};
+  if(m[id])buildList(m[id][0],m[id][1]);
+}
+
+// ── STATS ─────────────────────────────────────────────────
+function renderStats(){
+  const done=totalDone(),str=getStreak(),pct=Math.round((done/365)*100);
+  ['s1','s2','s3','s4'].forEach((id,i)=>{
+    document.getElementById(id).textContent=[done,str,pct+'%',365-done][i];
+  });
+  if(document.getElementById('modeLabel'))document.getElementById('modeLabel').textContent=S.mode==='sequential'?`Sequencial (Dia ${S.seqDay})`:'Devocional por data';
+  const MN=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  const MD=[31,28,31,30,31,30,31,31,30,31,30,31];
+  const y=new Date().getFullYear();
+  const c=document.getElementById('monthStats');c.innerHTML='';
+  MD.forEach((days,m)=>{
+    let md=0;for(let d=1;d<=days;d++){const dn=yd(new Date(y,m,d));if(isDone(y,dn))md++;}
+    const pp=Math.round((md/days)*100);
+    c.innerHTML+=`<div class="month-bar"><div class="month-row"><strong>${MN[m]}</strong><span>${md}/${days}</span></div><div class="prog-wrap"><div class="prog-fill" style="width:${pp}%"></div></div></div>`;
+  });
+}
+
+// ── NAV ───────────────────────────────────────────────────
+function showSec(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');btn.classList.add('active');
+  if(id==='calendario')renderCalendar();
+  if(id==='progresso')renderStats();
+  if(id==='confissoes')buildList(HC,'l-hc');
+}
+
+// ── UTILS ─────────────────────────────────────────────────
+function showToast(msg){const t=document.getElementById('toastEl');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+function confirmReset(){if(confirm('Apagar todo o progresso? Esta ação não pode ser desfeita.')){S.done={};S.seqDay=1;save();renderAll();showToast('Progresso redefinido.');}}
+function dismissInstall(){document.getElementById('installBanner').style.display='none';localStorage.setItem('pvInstall','1');}
+function renderAll(){renderToday();}
+
+// ── INIT ──────────────────────────────────────────────────
+load();
+if(S.mode){
+  document.getElementById('onboardModal').classList.add('hidden');
+  renderAll();
+  buildList(HC,'l-hc');
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.navigator.standalone;
+  if(isIOS&&!localStorage.getItem('pvInstall'))document.getElementById('installBanner').style.display='flex';
+}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+</script>
+</body>
+</html>
